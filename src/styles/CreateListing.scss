@@ -1,6 +1,5 @@
 @import "./variables.scss";
-@import "./breakPoints.scss";
-
+@import "../styles/breakPoints.scss";
 .create-listing {
   background-color: $lightgrey;
   padding: 40px 60px 120px;

@@ -1,6 +1,5 @@
 @import "./variables.scss";
-@import "./breakpoints.scss";
-
+@import "../styles/breakPoints.scss";
 .category-list {
   padding: 50px 80px;
   display: flex;
