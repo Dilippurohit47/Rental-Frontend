@@ -29,7 +29,7 @@ const Registerpage = () => {
     });
   };
 
-  console.log(formData);
+  // console.log(formData);
 
 const navigate =  useNavigate()
   const [passwordMatch,setpasswordMatch ] = useState(true)
@@ -51,7 +51,7 @@ const navigate =  useNavigate()
       for (var key in formData){
         register_form.append(key , formData[key])
       }
-    console.log( "formdata from register",formData)
+    // console.log( "formdata from register",formData)
 
 
       const response = await fetch(`${process.env.REACT_APP_BACKEND_SERVER}/auth/register`,({
