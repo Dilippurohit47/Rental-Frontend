@@ -10,7 +10,6 @@ const ReservationList = () => {
     const [loading, setLoading] = useState(true);
     const userId = useSelector((state) => state.user._id);
     const reservationList = useSelector((state) => state?.user?.reservationList);
-    console.log(reservationList)
 
 
 
@@ -26,7 +25,6 @@ const ReservationList = () => {
         );
   
         const data = await response.json();
-        console.log("data",data)
         dispatch(setreservationList(data));
         setLoading(false);
       } catch (err) {

@@ -14,10 +14,11 @@ const Loginpage = () => {
   const [password, setpassword] = useState("");
   const dispatch = useDispatch();
 const navigate = useNavigate();
+const [buttonLoading , setbuttonLoading] = useState(true)
 
   const handleSubmit = async(e) =>{
     e.preventDefault();
-
+setbuttonLoading(false)
     try {
       const response = await fetch(`${process.env.REACT_APP_BACKEND_SERVER}/auth/login`,{
         method:"POST",
@@ -28,7 +29,6 @@ const navigate = useNavigate();
       })
       
       const loggedIn = await response.json() 
-// console.log("login",loggedIn)
 
       if(loggedIn?.success === true ){
         dispatch(
@@ -37,21 +37,25 @@ const navigate = useNavigate();
             token:loggedIn?.token
           })
         )
+setbuttonLoading(true)
         toast.success(loggedIn?.message)
         navigate("/")
       }
       else{
+        setbuttonLoading(true)
         toast.error(loggedIn?.message)
       }
 
 
     } catch (error) {
-      console.log( "login failed",error.message)
+setbuttonLoading(true)
+  toast.error("internal server error")
       
     }
 
   }
 
+ 
   return (
     <div className="login">
       <div className="login_content">
@@ -70,7 +74,13 @@ const navigate = useNavigate();
             value={password}
             onChange={(e) => setpassword(e.target.value)}
           />
-          <button type="submit">Log In</button>
+
+          {
+          buttonLoading ? <button type="submit" >Log In</button> : <>
+          <p>Wait</p>
+          </>
+
+          }
         </form>
         <a href="/register">Dont have an account ? sign In Here</a>
       </div>

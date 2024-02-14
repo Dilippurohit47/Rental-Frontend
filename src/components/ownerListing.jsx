@@ -55,7 +55,6 @@ const deleteList = async() =>{
 
     const data = await response.json();
 
-    console.log("owners",data)
     if(data?.success === true){
         toast.success("Product deleted successfully")
         setTimeout(() => {

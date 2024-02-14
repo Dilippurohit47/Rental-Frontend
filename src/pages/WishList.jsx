@@ -3,15 +3,16 @@ import { useSelector } from "react-redux";
 
 import ListingCard from "../components/ListingCard";
 const WishList = () => {
-  const wishList = useSelector((state) => state.user.wishList);
+  const wishList = useSelector((state) => state?.user?.wishList);
 
+  console.log(wishList)
   return (
     <>
 
       <h1 className="title-list">Your Wish List</h1>
       <div className="list">
 
-               { wishList?.length === 0 ?  <p className='title-list'> Wishlist is empty , Go add some by liking properties!</p> :  
+               { !wishList || wishList.length === 0 ?    <p className='title-list'> Wishlist is empty , Go add some by liking properties!</p> :  
         wishList?.map(
           ({
             _id,

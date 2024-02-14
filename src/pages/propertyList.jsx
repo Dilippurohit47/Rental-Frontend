@@ -13,7 +13,6 @@ const PropertyList = () => {
   const user = useSelector((state) => state.user)
   
   const propertyList = user?.propertyList;
-  console.log(user)
 
   const dispatch = useDispatch()
   const getPropertyList = async () => {
@@ -22,7 +21,7 @@ const PropertyList = () => {
         method: "GET"
       })
       const data = await response.json()
-      console.log("data",data)
+
       dispatch(setPropertyList(data))
       setLoading(false)
     } catch (err) {
@@ -37,36 +36,41 @@ const PropertyList = () => {
   return loading ? <Loader /> : (
     <>
       <h1 className="title-list">Your Property List</h1>
-      <div className="list">
-        {propertyList?.map(
-          ({
-            _id,
-            creator,
-            listingPhotoPaths,
-            city,
-            province,
-            country,
-            category,
-            type,
-            price,
-            booking = false,
-          }) => (
-            <OwnerList
-              listingId={_id}
-              creator={creator}
-              listingPhotoPaths={listingPhotoPaths}
-              city={city}
-              province={province}
-              country={country}
-              category={category}
-              type={type}
-              price={price}
-              booking={booking}
-            />
-          )
-        )}
-      </div>
 
+
+      {
+          propertyList.length >= 0  ?  <p className='emptydiv'> You didn't create any properties </p> : <>      <div className="list">
+          {propertyList?.map(
+            ({
+              _id,
+              creator,
+              listingPhotoPaths,
+              city,
+              province,
+              country,
+              category,
+              type,
+              price,
+              booking = false,
+            }) => (
+              <OwnerList
+                listingId={_id}
+                creator={creator}
+                listingPhotoPaths={listingPhotoPaths}
+                city={city}
+                province={province}
+                country={country}
+                category={category}
+                type={type}
+                price={price}
+                booking={booking}
+              />
+            )
+          )}
+        </div>
+   </>
+
+            }
     </>
   );
 };

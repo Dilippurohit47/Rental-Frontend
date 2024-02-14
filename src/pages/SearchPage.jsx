@@ -13,7 +13,6 @@ const dispatch = useDispatch();
 const [loading,setloading] = useState(true);
     const {search} =useParams();
     const listings = useSelector((state) =>state.listings)
-console.log("search",search)
     const getSearchListing = async(req,res) =>{
         try {
             const response = await fetch(`${process.env.REACT_APP_BACKEND_SERVER}/properties/search/${search}`,{
@@ -21,7 +20,6 @@ console.log("search",search)
             })
 
             const data  = await response.json()
-            console.log("data from search",data)
                dispatch(setListings({listings:data})) 
                setloading(false)
 

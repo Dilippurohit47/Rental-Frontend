@@ -31,7 +31,7 @@ const ListingDetails = () => {
       setlisting(data);
       setLoading(false);
     } catch (error) {
-      console.log("fetch listing data failed ", error.message);
+      toast.error("internal server error")
     }
   };
 
@@ -63,8 +63,14 @@ const ListingDetails = () => {
   const customerId = useSelector((state) => state.user?._id);
   const navigate = useNavigate();
 
+
+  const [buttonLoading ,setbuttonLoading] = useState(true)
+
   const handleSubmit = async () => {
+    setbuttonLoading(false)
+
     try {
+
       const bookingForm = {
         customerId,
         listingId,
@@ -73,7 +79,7 @@ const ListingDetails = () => {
         endDate: dateRange[0].endDate.toDateString(),
         totalPrice: listing?.price * dayCount,
       };
-
+      
       const response = await fetch(`${process.env.REACT_APP_BACKEND_SERVER}/bookings/create`, {
         method: "POST",
         headers: {
@@ -82,13 +88,15 @@ const ListingDetails = () => {
         body: JSON.stringify(bookingForm),
       });
 
-      console.log("booking button working");
       if (response.ok) {
         toast.success("booking successfull")
+        setbuttonLoading(true)
+
         navigate(`/${customerId}/trips`);
+
       }
     } catch (error) {
-      console.log("submit booking failed", error.message);
+      setbuttonLoading(true)
     }
   };
 
@@ -172,9 +180,20 @@ const ListingDetails = () => {
               <p>Start Date : {dateRange[0].startDate.toDateString()}</p>
               <p>End Date : {dateRange[0].endDate.toDateString()}</p>
 
-              <button type="submit" className="button" onClick={handleSubmit}>
+
+              {
+                buttonLoading ? <>   <button type="submit" className="button" onClick={() => {
+                  handleSubmit();
+                  setbuttonLoading(false);
+              }}
+               >
                 BOOKING
-              </button>
+              </button></> : <>
+              <p>Booking in process</p>
+                </>
+              }
+
+           
             </div>
           </div>
         </div>

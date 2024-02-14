@@ -42,7 +42,8 @@ const ListingCard = ({
   const dispatch = useDispatch();
   const wishList = user?.wishList;
 
-  const isLiked = wishList.find((item) => item?._id === listingId);
+  const isLiked = wishList?.find((item) => item?._id === listingId);
+
 
   const patchWishList = async () => {
     if (user?._id === creator?._id) {
@@ -59,18 +60,18 @@ const ListingCard = ({
       }
     );
     const data = await response.json();
+    console.log("data" ,data)
 
-    // console.log(data);
+    if (data?.wishList?.length === 0) {
+      toast.error(data?.message); 
 
-    if (data?.wishList.length === 0) {
-      // Item added to wishlist
-      toast.error(data?.message);
+  dispatch(setwishList(null));
+
+
     } else {
-      // Item removed from wishlist
       toast.success(data?.message);
-    }
-
     dispatch(setwishList(data?.wishList));
+    }
   };
 
 
@@ -133,9 +134,9 @@ const ListingCard = ({
           patchWishList();
         }}
       >
-        {isLiked ? (
+ {isLiked ? (
           <>
-            <FaHeart style={{ color: "red" }} />
+           <FaHeart style={{ color: "red" }} />
           </>
         ) : (
           <>

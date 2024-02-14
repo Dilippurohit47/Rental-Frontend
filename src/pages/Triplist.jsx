@@ -11,11 +11,8 @@ import TriplistCard from "../components/tripListCard"
 const TripList = () => {
     const [loading, setLoading] = useState(true);
     const userId = useSelector((state) => state.user._id);
-    const tripList = useSelector((state) => state?.user?.triplist);
-    const user = useSelector((state) => state?.user);
-    console.log("triplist",tripList)
-
-
+    const triplist = useSelector((state) => state?.user?.tripList?.trips);
+    
 
     const dispatch = useDispatch();
   
@@ -29,7 +26,6 @@ const TripList = () => {
         );
   
         const data = await response.json();
-
         dispatch(setTripList(data));
         setLoading(false);
       } catch (err) {
@@ -48,8 +44,11 @@ const TripList = () => {
     ) : (
       <>
         <h1 className="title-list">Your Trip List</h1>
-        <div className="list">
-          {tripList?.map(({ listingId, hostId, customerId, startDate,totalPrice, endDate, booking=true }) => (
+        {
+         !triplist || triplist.length === 0 ?  <p className='emptydiv'> currently Triplist is empty ! </p> : <>
+          
+          <div className="list">
+          {triplist?.map(({ _id, listingId, hostId, customerId, startDate,totalPrice, endDate, booking=true }) => (
             <TriplistCard
               listingId={listingId?._id}
               creator={hostId?._id}
@@ -62,10 +61,13 @@ const TripList = () => {
               endDate={endDate}
               price={listingId?.price}
               booking={booking}
-              bookingId= {customerId?._id}
+              bookingId= {_id}
             />
           ))}
         </div>
+           </>
+        }
+     
 
       </>
     );

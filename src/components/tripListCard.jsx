@@ -3,11 +3,11 @@ import "../styles/ListingCard.scss";
 import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { setwishList } from "../redux/userReducer";
+import { setDeleteTripLlist, setwishList } from "../redux/userReducer";
 import { FaHeart } from "react-icons/fa";
 import toast from "react-hot-toast";
 import { MdDelete } from "react-icons/md";
-
+import { setTripList } from '../redux/userReducer';
 
 const ListingCard = ({
   listingId,
@@ -35,35 +35,31 @@ const ListingCard = ({
     );
   };
 
-//   const navigate = useNavigate()
+  //   const navigate = useNavigate()
   const goToNextSlide = () => {
     setcurrentIndex((prevIndex) => (prevIndex + 1) % listingPhotoPaths.length);
   };
 
   const user = useSelector((state) => state?.user);
-//   console.log("booking",booking)
 
-const id = bookingId
-const deleteList = async() =>{
-
-    const response = await fetch(`${process.env.REACT_APP_BACKEND_SERVER}/bookings/${id}`,{
-        method:"DELETE"
-    })
+  const dispatch = useDispatch()
+  const id = bookingId;
+  const deleteList = async () => {
+    const response = await fetch(
+      `${process.env.REACT_APP_BACKEND_SERVER}/bookings/${id}`,
+      {
+        method: "DELETE",
+      }
+    );
 
     const data = await response.json();
-
-    console.log("owners",data)
-    if(data?.success === true){
-        toast.success("Property deleted successfully")
-        setTimeout(() => {
-            window.location.reload();
-          }, 300)
-    }else{
-        toast.error(data?.message)
+    if (data?.success === true) {
+      toast.success("Booking cancel!");
+      dispatch(setDeleteTripLlist(id))
+    } else {
+      toast.error(data?.message);
     }
-
-}
-
+  };
 
   return (
     <div className="listing-card">
@@ -78,10 +74,7 @@ const deleteList = async() =>{
               className="slide"
               onClick={() => navigate(`/properties/${listingId}`)}
             >
-              <img
-                src={photo}
-                alt={`photo ${index + 1}`}
-              />
+              <img src={photo} alt={`photo ${index + 1}`} />
               <div
                 className="prev-button"
                 onClick={(e) => {
@@ -121,10 +114,9 @@ const deleteList = async() =>{
         onClick={(e) => {
           e.stopPropagation();
           deleteList();
-
         }}
       >
-            <MdDelete style={{color: "white"}} />
+        <MdDelete style={{ color: "white" }} />
       </button>
     </div>
   );

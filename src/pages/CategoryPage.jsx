@@ -25,7 +25,6 @@ const dispatch = useDispatch()
               );
         
               const data = await response.json();
-          console.log(data)
 
               dispatch(setListings({ listings: data }));
               setloading(false);

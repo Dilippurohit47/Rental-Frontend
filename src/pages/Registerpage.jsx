@@ -21,15 +21,12 @@ const Registerpage = () => {
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-
     setformData({
       ...formData,
       [name]: value,
       [name]: name === "profileImage" ? files[0] : value,
     });
   };
-
-  // console.log(formData);
 
 const navigate =  useNavigate()
   const [passwordMatch,setpasswordMatch ] = useState(true)
@@ -43,29 +40,45 @@ const navigate =  useNavigate()
     }
   },[formData])
 
+
+
+  
+  const [loadingButton,setloadingButton] = useState(true)
+
   const handleSubmit = async(e) =>{
     e.preventDefault();
+    setloadingButton(false)
     try {
       const register_form = new FormData()
 
       for (var key in formData){
         register_form.append(key , formData[key])
       }
-    // console.log( "formdata from register",formData)
-
-
       const response = await fetch(`${process.env.REACT_APP_BACKEND_SERVER}/auth/register`,({
         method:"POST",
         body:register_form
       }))
 
+      const data = await response.json() 
+
       if(response.ok){
-        toast.success("Registered Successfully ")
+        toast.success(data.message)
         navigate("/login")
+    setloadingButton(true)
+
+      }
+      else{
+        setloadingButton(true)
+
+        toast.error(data?.message)
+
       }
 
     } catch (error) {
-      console.log("Registration failed", error.message)
+      setloadingButton(true)
+
+      toast.error("internal server error")
+
     }
 
 
@@ -138,7 +151,6 @@ const navigate =  useNavigate()
             type="file"
             name="profileImage"
             accept="image/*"
-            required
             onChange={handleChange}
             style={{ display: "none" }}
           />
@@ -153,8 +165,10 @@ const navigate =  useNavigate()
         <img  src={URL.createObjectURL(formData.profileImage)} alt="profile photo" style={{maxWidth:"80px"}}  />
     )
 }
-
-          <button typeof="submit" disabled={!passwordMatch}>REGISTER</button>
+  {
+    loadingButton ?  <button typeof="submit" disabled={!passwordMatch}>REGISTER</button> : <p>Processing...</p>
+  }
+         
         </form>
         <a href="/login">Already have and account </a>
       </div>
